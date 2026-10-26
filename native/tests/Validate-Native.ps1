@@ -99,6 +99,43 @@ try {
     $form.Dispose()
     $form = $null
 
+    $hostWindow = [System.Windows.Forms.Form]::new()
+    $hostWindow.Handle | Out-Null
+    $hostWindow.Dispose()
+    for ($attempt = 0; $attempt -lt 2; $attempt++) {
+        $script:panelShown = $false
+        $script:panelRenderingCorrect = $true
+        $closer = [System.Windows.Forms.Timer]::new()
+        $closer.Interval = 100
+        $closer.Add_Tick({
+            foreach ($window in @([System.Windows.Forms.Application]::OpenForms)) {
+                if ($window -is [DezsMinion.ModMenu] -and $window.Visible) {
+                    $script:panelShown = $true
+                    foreach ($control in $window.Controls) {
+                        if (($control -is [System.Windows.Forms.Label] -or $control -is [System.Windows.Forms.ButtonBase]) -and
+                            $control.UseCompatibleTextRendering) {
+                            $script:panelRenderingCorrect = $false
+                        }
+                    }
+                    $window.Close()
+                }
+            }
+        })
+        try {
+            $closer.Start()
+            [DezsMinion.ModMenu]::Run($mod, (Join-Path $bin 'SparkingZERO-Win64-Shipping.exe'))
+        } finally {
+            $closer.Stop()
+            $closer.Dispose()
+        }
+        Assert-True $script:panelShown 'Run failed to show the panel after a host window was created'
+        Assert-True $script:panelRenderingCorrect 'Panel controls did not retain GDI text rendering'
+        $releasedLock = [IO.File]::Open((Join-Path $mod 'Bridge\panel.lock'), [IO.FileMode]::Open, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
+        $releasedLock.Dispose()
+        $request = [IO.File]::ReadAllText((Join-Path $mod 'Bridge\request.txt'))
+        Assert-True ($request -match '(?m)^armed=0\r?$') 'Closing the actual panel did not publish disarm'
+    }
+
     $other = Join-Path $bin 'ue4ss\Mods\OtherMod'
     New-Item -ItemType Directory -Path $other | Out-Null
     Assert-Throws { & $uninstaller } 'Uninstaller removed a shared loader'

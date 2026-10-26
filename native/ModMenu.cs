@@ -122,6 +122,14 @@ namespace DezsMinion
             hide.Click += delegate { Hide(); };
             Controls.Add(hide);
             AddLabel("Closing the panel releases continuous controls.\nUse borderless/windowed mode to see this external overlay.", 24, 594, 470, 42, 9, Color.Gray);
+            // PowerShell may already own windows; configure our controls, not the host's global default.
+            foreach (Control control in Controls)
+            {
+                Label label = control as Label;
+                if (label != null) label.UseCompatibleTextRendering = false;
+                ButtonBase button = control as ButtonBase;
+                if (button != null) button.UseCompatibleTextRendering = false;
+            }
             tray.Icon = SystemIcons.Application;
             tray.Text = "Dez's Minion - F6 controls";
             tray.Visible = true;
@@ -391,7 +399,6 @@ namespace DezsMinion
         public static void Run(string modDirectory, string gameExecutable)
         {
             Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
             try { Application.Run(new ModMenu(modDirectory, gameExecutable)); }
             catch (IOException error)
             {
