@@ -68,6 +68,10 @@ RUN
 
    powershell.exe -NoProfile -STA -File .\native\Start-ModMenu.ps1
 
+If the menu type is already loaded in your PowerShell session, the launcher
+automatically runs in a fresh process so updated code can load without an
+Add-Type name conflict. The original session waits until that panel closes.
+
 3. Enter an offline battle. Choose Player 1 or Player 2 explicitly.
 4. Select the requested features and check "Enable controls".
 5. Wait for the runtime acknowledgement and actual HP/Ki/skill readouts.

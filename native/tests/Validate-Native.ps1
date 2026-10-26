@@ -59,6 +59,10 @@ try {
     Assert-Throws { & $installer -GameDirectory $game -LoaderArchive $archive } 'Reinstallation did not reject overwrites'
 
     & (Join-Path $native 'Start-ModMenu.ps1') -CompileOnly
+    $loadedMenuType = 'DezsMinion.ModMenu' -as [type]
+    & (Join-Path $native 'Start-ModMenu.ps1') -CompileOnly
+    Assert-True ($LASTEXITCODE -eq 0) 'Repeated launcher invocation failed in the fresh process'
+    Assert-True (('DezsMinion.ModMenu' -as [type]) -eq $loadedMenuType) 'Repeated launch modified the host type'
     $mod = Join-Path $bin 'ue4ss\Mods\DezsMinion'
     $binding = [Reflection.BindingFlags]'Instance,NonPublic'
     $constructor = [DezsMinion.ModMenu].GetConstructor($binding, $null, [type[]]@([string], [string]), $null)

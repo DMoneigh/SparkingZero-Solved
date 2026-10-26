@@ -10,6 +10,18 @@ if ($PSVersionTable.PSEdition -ne 'Desktop') {
 if ([Threading.Thread]::CurrentThread.ApartmentState -ne 'STA') {
     throw 'Start Windows PowerShell with -STA, or use Launch-ModMenu.cmd.'
 }
+if ('DezsMinion.ModMenu' -as [type]) {
+    # Add-Type assemblies cannot be unloaded; a fresh process also picks up source updates.
+    $launcher = Join-Path $PSHOME 'powershell.exe'
+    $arguments = @('-NoProfile', '-STA', '-File', $PSCommandPath)
+    if ($CompileOnly) { $arguments += '-CompileOnly' }
+    Write-Host 'The menu type is already loaded. Starting a fresh PowerShell process.'
+    & $launcher @arguments
+    if ($LASTEXITCODE -ne 0) {
+        throw "The fresh control-panel process failed with exit code $LASTEXITCODE."
+    }
+    return
+}
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 Add-Type -Path (Join-Path $PSScriptRoot 'ModMenu.cs') -ReferencedAssemblies 'System.Windows.Forms', 'System.Drawing', 'System.Core'
