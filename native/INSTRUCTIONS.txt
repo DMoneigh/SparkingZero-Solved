@@ -1,0 +1,162 @@
+DEZ'S MINION - NATIVE OFFLINE MOD
+================================
+
+WHAT THIS IS
+
+A UE4SS Lua mod loaded into Sparking ZERO at game startup, plus a native Windows
+F6 control panel. The supplied, pinned dwmapi proxy loads UE4SS, which invokes
+the game's reflected functions on its game thread. This is launch-time DLL
+loading, not an arbitrary-DLL / remote-process injector. No memory offsets,
+game executable patches, DRM bypasses or anti-cheat bypasses are included.
+
+The browser index.html remains a separate simulation. It cannot control the
+Windows game. Use Launch-ModMenu.cmd for the real mod controls.
+
+IMPORTANT COMPATIBILITY LIMIT
+
+Native code has not been exercised against a running copy of your game.
+Public SDK declarations establish the function names, not compatibility with
+every game update. Missing reflected APIs disable the runtime and produce an
+error. UE4SS itself can fail before this safeguard runs. Back up saves, use a
+legitimate installed copy, and keep all modifications offline.
+
+The input ZIP is not extracted or launched automatically. Do not run unknown
+DLLs from an archive solely to use this project. Point installation at your
+own installed game, not the 36 GB uploaded ZIP.
+
+REQUIREMENTS
+
+- 64-bit Windows and Windows PowerShell 5.1 with .NET Framework / WinForms.
+- A writable game installation, closed while installing/uninstalling.
+- No existing UE4SS installation in the selected Win64 folder.
+- Borderless or windowed game mode for the external topmost panel.
+- Your system's normal PowerShell script execution policy must permit these
+  scripts. This project does not change or bypass that policy.
+
+INSTALL
+
+From this project folder, in PowerShell:
+
+  .\native\Install-Mod.ps1 -GameDirectory 'D:\Games\DRAGON BALL Sparking! ZERO' -DownloadLoader
+
+You can pass the actual SparkingZERO\Binaries\Win64 folder instead.
+Use -WhatIf to check paths/conflicts without downloading or writing files.
+
+The loader is UE4SS 3.0.1-1152-ge3ba1016, repackaged with game-specific settings
+by the third-party AccessForge accessibility project. It is NOT a binary
+produced or audited by this project. loader-lock.json pins the source commit
+and the archive/runtime SHA-256 values. The installer verifies both hashes.
+The bundled loader's MIT license and attribution are retained.
+
+For a manually downloaded copy of that exact bundle:
+
+  .\native\Install-Mod.ps1 -GameDirectory 'D:\Games\DRAGON BALL Sparking! ZERO' -LoaderArchive '.\ue4ss-tested-1152.zip'
+
+The installer refuses other loader versions, existing loaders and file
+overwrites. A ue4ss folder containing only residual UE4SS.log files is allowed
+so an ordinary uninstall/reinstall retains diagnostics. It never replaces
+version.dll, Steam DLLs or game executables.
+Do not remove another mod loader blindly; use its own uninstall instructions.
+
+RUN
+
+1. Launch the game normally through your usual legitimate launcher.
+2. Double-click Launch-ModMenu.cmd, or run:
+
+   powershell.exe -NoProfile -STA -File .\native\Start-ModMenu.ps1
+
+3. Enter an offline battle. Choose Player 1 or Player 2 explicitly.
+4. Select the requested features and check "Enable controls".
+5. Wait for the runtime acknowledgement and actual HP/Ki/skill readouts.
+
+F6 shows/hides the native panel when the game or the panel has focus. The
+panel must remain running; its tray icon can restore it. F6 is reserved by
+the panel while it runs. If another program owns F6, a warning is shown.
+This is a separate native window, not a DirectX-rendered in-game overlay.
+
+CONTROLS
+
+Max Health: refreshes to GetMaxHPGaugeValue(), not an invented fixed HP value.
+Max Ki: refreshes to GetMaxSPGaugeValue().
+Max Skill Count Bars: refreshes to GetMaxBlastStockCount(), respecting the
+current character's real limit rather than the browser's illustrative six.
+Unlimited Sparking: enters via DebugToSparkingMode on activation, refreshes
+the gauge and freezes its timer. The prior timer-stop flag is restored when
+disabled. Scripted moves/ultimate attacks may still end the transformation;
+toggle off/on to request entry again. This is not a combat-state bypass.
+Control Frame Rate: sets GameUserSettings' actual frame-rate limit to 30-240
+or 0 (uncapped), without writing SaveSettings. The original cap is restored.
+VSync, display refresh and game-side simulation constraints can still limit
+the effective frame rate. Higher caps may affect this game's battle timing.
+
+Health/Ki/skill are replenished at a 16 ms scheduled interval, not a damage
+hook. A single lethal hit may still defeat the fighter. Disabling these
+features stops replenishment; it does not rewind HP, Ki or spent skills.
+
+SAFETY AND LIFECYCLE
+
+All controls start disabled on every panel launch. Only a unique local
+battle-controller pawn matching the selected side is modified. No enemies
+or all-character scans receive writes.
+
+Before gameplay writes, the mod checks the current world's NetDriver and
+the game's online, spectator, matched, matchmaking and standby-training
+flags. Unknown or unsupported state blocks operation. These checks are
+not a substitute for staying offline; do not launch online modes modded.
+
+Requests use a strict data-only file protocol. The mod does not evaluate
+commands or code from the panel. No HTTP server or public network port is
+opened. A panel-session ID and sequence distinguish requested from applied
+state. Requests expire after three seconds without the panel heartbeat.
+
+Closing the panel sends a disarm request; an unexpected panel exit expires
+within three seconds of game-thread service resuming. Sparking timer and
+frame-rate changes are restored where their original objects still exist.
+Game-thread failures latch the mod off and show the actual error; a game
+restart is required. Native loader crashes cannot be caught by Lua.
+
+If the game changes characters/worlds, the active pawn is resolved again.
+No stale pawn is used to apply ongoing health/Ki/skill writes.
+
+TROUBLESHOOTING
+
+- No handshake: inspect SparkingZERO\Binaries\Win64\ue4ss\UE4SS.log. Confirm
+  ue4ss\Mods\DezsMinion\Scripts\main.lua and enabled.txt are present.
+- Missing API / error: keep the error and executable version for diagnosis.
+  Do not replace missing APIs with guessed addresses. Restart after fixing.
+- Waiting for fighter: load an offline battle and choose the correct side.
+  Unsupported controller layouts are refused rather than guessing.
+- FPS controls set a cap, not a guarantee of achieved performance.
+- Panel not visible: use borderless/windowed mode or the tray icon.
+- On startup, installed component hashes are checked. Changed loader/mod
+  files require review and reinstall; do not bypass the integrity warning.
+
+UNINSTALL
+
+Close both the game and panel, then:
+
+  .\native\Uninstall-Mod.ps1
+
+Only the recorded, unchanged installed files and known bridge files are
+removed. Other mods, saves and unknown files are retained. If recorded files
+were edited, uninstall stops before removing anything. Review those changes
+and remove this installation manually instead of deleting others' files.
+If additional mods now share UE4SS, automatic uninstall stops; remove only
+the DezsMinion folder manually and retain their shared loader.
+Do not delete native\installation.json until uninstall is complete.
+
+PUBLIC API SOURCES
+
+Reflected declarations (read as reference; implementation here is original):
+https://github.com/WistfulHopes/SparkingZERO_ModProject/blob/67a715b3728c7328943445f4641586f9ec687bf7/Source/SS/Public/SSCharacter.h
+https://github.com/WistfulHopes/SparkingZERO_ModProject/blob/67a715b3728c7328943445f4641586f9ec687bf7/Source/SS/Public/SSGameInstance.h
+
+Independent evidence of resource reads and battle-controller selection:
+https://github.com/AccessForge/SparkingZeroAccess/blob/527125583d5d7ef36890c1c006ed187923e7e923/SparkingZeroAccess/battle.lua
+
+Loader layout, known InitGameState hook issue, settings and hashes:
+https://github.com/AccessForge/SparkingZeroAccess/blob/527125583d5d7ef36890c1c006ed187923e7e923/deps/ue4ss-tested-1152.md
+
+UE4SS API:
+https://docs.ue4ss.com/dev/
+https://github.com/UE4SS-RE/RE-UE4SS

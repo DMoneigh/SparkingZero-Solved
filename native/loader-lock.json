@@ -1,0 +1,8 @@
+{
+  "name": "UE4SS 3.0.1-1152-ge3ba1016",
+  "url": "https://raw.githubusercontent.com/AccessForge/SparkingZeroAccess/527125583d5d7ef36890c1c006ed187923e7e923/deps/ue4ss-tested-1152.zip",
+  "archiveSha256": "78EC4F345F3990365CE77B76934B73974EA0AEA99E2BB4BC6A67D4F10881CBEE",
+  "runtimeSha256": "680A026890ABB4D0DF2211251F8DEFC1681A584275F1521DCC0FE30AF480006F",
+  "source": "https://github.com/UE4SS-RE/RE-UE4SS",
+  "bundleDocumentation": "https://github.com/AccessForge/SparkingZeroAccess/blob/527125583d5d7ef36890c1c006ed187923e7e923/deps/ue4ss-tested-1152.md"
+}
