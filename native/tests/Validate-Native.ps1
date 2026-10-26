@@ -32,8 +32,11 @@ try {
     [IO.File]::WriteAllText((Join-Path $bin 'SparkingZERO-Win64-Shipping.exe'), 'TEST FIXTURE - NOT AN EXECUTABLE')
     $installer = Join-Path $tools 'Install-Mod.ps1'
     $uninstaller = Join-Path $tools 'Uninstall-Mod.ps1'
-    & $installer -GameDirectory $game -LoaderArchive $archive -WhatIf
+    & $installer -GameDirectory $game -WhatIf
     Assert-True (-not (Test-Path -LiteralPath (Join-Path $bin 'dwmapi.dll'))) '-WhatIf wrote files'
+    Assert-True (-not (Test-Path -LiteralPath (Join-Path $tools '.cache'))) 'Default -WhatIf created a download cache'
+    Assert-Throws { & $installer -GameDirectory $game -DownloadLoader:$false } 'Explicit download opt-out was ignored'
+    Assert-Throws { & $installer -GameDirectory $game -DownloadLoader -LoaderArchive $archive } 'Conflicting loader options were accepted'
     [IO.File]::WriteAllText((Join-Path $bin 'version.dll'), 'DO NOT OVERWRITE')
     Assert-Throws { & $installer -GameDirectory $game -LoaderArchive $archive } 'Conflicting proxy was accepted'
     Assert-True (([IO.File]::ReadAllText((Join-Path $bin 'version.dll'))) -eq 'DO NOT OVERWRITE') 'Conflicting proxy was changed'
@@ -41,7 +44,14 @@ try {
     $badArchive = Join-Path $root 'invalid.zip'
     [IO.File]::WriteAllText($badArchive, 'INVALID')
     Assert-Throws { & $installer -GameDirectory $game -LoaderArchive $badArchive } 'Invalid archive hash was accepted'
-    & $installer -GameDirectory $game -LoaderArchive $archive
+    $cache = Join-Path $tools '.cache'
+    New-Item -ItemType Directory -Path $cache -Force | Out-Null
+    $cachedArchive = Join-Path $cache 'ue4ss-tested-1152.zip'
+    Copy-Item -LiteralPath $badArchive -Destination $cachedArchive
+    Assert-Throws { & $installer -GameDirectory $game } 'Default loader selection accepted an invalid cached hash'
+    Assert-True (-not (Test-Path -LiteralPath (Join-Path $bin 'dwmapi.dll'))) 'Invalid default cache wrote loader files'
+    Copy-Item -LiteralPath $archive -Destination $cachedArchive -Force
+    & $installer -GameDirectory $game
     Assert-True (Test-Path -LiteralPath (Join-Path $bin 'dwmapi.dll')) 'Loader was not installed'
     Assert-True (Test-Path -LiteralPath (Join-Path $bin 'ue4ss\Mods\DezsMinion\Scripts\main.lua')) 'Runtime was not installed'
     Assert-True (Test-Path -LiteralPath (Join-Path $bin 'ue4ss\Mods\DezsMinion\enabled.txt')) 'Mod was not enabled'

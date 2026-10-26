@@ -37,10 +37,13 @@ INSTALL
 
 From this project folder, in PowerShell:
 
-  .\native\Install-Mod.ps1 -GameDirectory 'D:\Games\DRAGON BALL Sparking! ZERO' -DownloadLoader
+  .\native\Install-Mod.ps1 -GameDirectory 'D:\Games\DRAGON BALL Sparking! ZERO'
 
 You can pass the actual SparkingZERO\Binaries\Win64 folder instead.
 Use -WhatIf to check paths/conflicts without downloading or writing files.
+Without -LoaderArchive, the installer automatically uses the cached pinned
+loader or downloads it if absent. SHA-256 verification still runs before
+installation. The explicit -DownloadLoader flag remains supported.
 
 The loader is UE4SS 3.0.1-1152-ge3ba1016, repackaged with game-specific settings
 by the third-party AccessForge accessibility project. It is NOT a binary

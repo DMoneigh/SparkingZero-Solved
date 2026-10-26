@@ -38,7 +38,10 @@ if (Test-Path -LiteralPath $existingRuntime) {
 }
 if ($LoaderArchive -and $DownloadLoader) { throw 'Choose either -LoaderArchive or -DownloadLoader.' }
 if (-not $LoaderArchive -and -not $DownloadLoader) {
-    throw 'Supply -DownloadLoader to fetch the pinned loader, or -LoaderArchive with the documented, hash-matching ZIP.'
+    if ($PSBoundParameters.ContainsKey('DownloadLoader')) {
+        throw 'Downloads were explicitly disabled. Supply -LoaderArchive with the documented, hash-matching ZIP.'
+    }
+    $DownloadLoader = $true
 }
 if (-not $PSCmdlet.ShouldProcess($bin, 'Install pinned UE4SS launch-time loader and DezsMinion offline mod')) { return }
 
