@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101113">
+  <title>Sparking Zero | Control Room</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h9m4 0h3M4 17h3m4 0h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol>
+    <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6m3-3v5l3 2"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="m9 3-1 3-3 1-2 4 2 2v4l4 3 3-1 3 1 4-3v-4l2-2-2-4-3-1-1-3Z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/><path d="M4 12h4l2-4 3 8 2-4h5"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="m13 2-9 12h7l-1 8 10-13h-7l1-7Z"/></symbol>
+    <symbol id="i-flame" viewBox="0 0 24 24"><path d="M13 2c1 6-6 6-4 12-3-1-3-4-3-4-6 8 1 13 6 12 10-1 10-11 5-15 0 3-2 4-2 4 1-5-2-9-2-9Z"/></symbol>
+    <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4M6 11l3-3 3 4 5-6"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 10 5-10 5L2 8l10-5Zm-9 9 9 5 9-5M3 16l9 5 9-5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 2 9 4v6c0 6-9 10-9 10S3 18 3 12V6l9-4Z"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 19 19 5M5 5h14v14"/></symbol>
+    <symbol id="i-keyboard" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M6 9h1m4 0h1m4 0h1M6 12h1m4 0h1m4 0h1M7 16h10"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v1"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+  </svg>
+
+  <div class="app-shell" id="app-shell">
+    <aside class="sidebar">
+      <a href="#control-room" class="brand" aria-label="Sparking Zero control room">
+        <span class="brand-mark"><svg><use href="#i-bolt"/></svg></span>
+        <span class="brand-type">SPARKING<span>ZERO <b>//</b> MOD MENU</span></span>
+      </a>
+      <div class="workspace-label">WORKSPACE</div>
+      <nav aria-label="Main navigation">
+        <button class="nav-item selected" data-page="control-room"><svg><use href="#i-grid"/></svg>Control room<span class="nav-dot"></span></button>
+        <button class="nav-item" data-page="profiles"><svg><use href="#i-sliders"/></svg>Profiles<span class="nav-count" id="profile-count">3</span></button>
+        <button class="nav-item" data-page="session-log"><svg><use href="#i-history"/></svg>Session log</button>
+        <button class="nav-item" data-page="settings"><svg><use href="#i-settings"/></svg>Settings</button>
+      </nav>
+      <div class="sidebar-session">
+        <div class="session-label"><span class="status-dot"></span> LOCAL SESSION</div>
+        <strong>Ready when you are.</strong>
+        <p>Your next level starts here.</p>
+        <div class="session-detail"><span>Environment</span><span>Preview <svg><use href="#i-info"/></svg></span></div>
+        <div class="session-detail"><span>Game connection</span><span class="muted">Not attached</span></div>
+      </div>
+      <div class="sidebar-bottom">
+        <button class="utility-link" id="hotkeys-button"><svg><use href="#i-keyboard"/></svg>Keyboard shortcuts<kbd>?</kbd></button>
+        <button class="utility-link" id="about-button"><svg><use href="#i-info"/></svg>About this project<svg class="small-arrow"><use href="#i-arrow"/></svg></button>
+        <div class="sidebar-credit"><span class="avatar">D<span></span></span><div>Dez's Minion<small>LOCAL WORKSPACE</small></div><span class="version">v1.0</span></div>
+      </div>
+    </aside>
+
+    <div class="main-shell">
+      <header class="topbar">
+        <div class="breadcrumb">WORKSPACE <span>/</span> <strong id="breadcrumb-page">CONTROL ROOM</strong></div>
+        <div class="topbar-right"><span class="preview-label"><span class="status-dot"></span>Preview mode</span><span class="topbar-divider"></span><button class="menu-key" id="hide-menu"><kbd>F6</kbd><span>Toggle menu</span></button></div>
+      </header>
+
+      <main>
+        <section id="page-control-room" class="page">
+          <div class="page-heading"><div><div class="eyebrow">THE LIMIT IS YOURS.</div><h1>Your rules. Your power<span>.</span></h1><p>Fine-tune your fighter. Take control of every battle.</p></div><button class="button profile-button" data-go="profiles"><svg><use href="#i-sliders"/></svg><span id="current-profile">Training preset</span><span class="chevron">&#8964;</span></button></div>
+
+          <section class="hero" aria-label="Interactive training preview">
+            <div class="hero-art"></div><div class="hero-grain"></div>
+            <div class="hero-copy"><div class="hero-kicker"><span></span> DRAGON BALL: SPARKING! ZERO</div><h2>BREAK YOUR<br><span>LIMITS.</span></h2><p>Less holding back. More going all out.</p><div class="hero-tags"><span><svg><use href="#i-shield"/></svg>OFFLINE FIRST</span><span>BUILT FOR YOUR PLAYSTYLE</span></div></div>
+            <div class="hero-corner"><span class="live-dot"></span> TRAINING SIMULATION</div>
+            <div class="training-hud"><div class="hud-title"><span>TRAINING DUMMY</span><span id="hud-health">100%</span></div><div class="hud-track"><span id="hud-health-bar"></span></div><div class="hud-bottom"><span id="hud-energy">KI 100% <b>/</b> SKILL 3</span><button id="test-attack">Test attack <span>&#8599;</span></button></div></div>
+            <span class="hero-index">SZ / 01</span>
+          </section>
+
+          <section class="stats-strip" aria-label="Session overview">
+            <div class="stat"><span class="stat-icon"><svg><use href="#i-grid"/></svg></span><div><strong>05</strong><span>Available mods</span></div></div>
+            <div class="stat"><span class="stat-icon orange"><svg><use href="#i-bolt"/></svg></span><div><strong id="active-count">03 <small>ACTIVE</small></strong><span>Power at your fingertips</span></div></div>
+            <div class="stat"><span class="stat-icon"><svg><use href="#i-monitor"/></svg></span><div><strong id="fps-stat">60 <small>FPS</small></strong><span>Preview frame cap</span></div></div>
+            <div class="stat"><span class="stat-icon"><svg><use href="#i-sliders"/></svg></span><div><strong id="profile-stat">Training</strong><span>Current profile</span></div></div>
+          </section>
+
+          <div class="section-heading"><div><h2>Battle controls <span>5</span></h2><p>A little extra power goes a long way.</p></div><div class="section-actions"><button class="text-button" id="reset-all"><svg><use href="#i-reset"/></svg>Reset all</button><button class="button enable-all" id="enable-all"><svg><use href="#i-bolt"/></svg>Enable all</button></div></div>
+
+          <div class="controls-grid">
+            <article class="control-card health-card">
+              <div class="card-top"><span class="feature-icon green"><svg><use href="#i-heart"/></svg></span><button class="switch" role="switch" aria-label="Max Health" aria-checked="true" data-toggle="health"><span></span></button></div>
+              <h3>Max Health</h3><p>Stay in the fight. Keep your health<br class="desktop-break"> at maximum, always.</p>
+              <div class="card-readout"><span>HEALTH RESERVE</span><strong id="health-value">100<span>%</span></strong></div><div class="segmented-bar green-bar" id="health-bar"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="card-footer"><span class="feature-status" data-status="health">Enabled</span><span class="card-number">01 <span>/ HEALTH</span></span></div>
+            </article>
+            <article class="control-card ki-card">
+              <div class="card-top"><span class="feature-icon blue"><svg><use href="#i-bolt"/></svg></span><button class="switch" role="switch" aria-label="Max Ki" aria-checked="true" data-toggle="ki"><span></span></button></div>
+              <h3>Max Ki</h3><p>Unleash your strongest attacks.<br class="desktop-break"> Never run out of energy.</p>
+              <div class="card-readout"><span>KI ENERGY</span><strong id="ki-value">100<span>%</span></strong></div><div class="segmented-bar blue-bar" id="ki-bar"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="card-footer"><span class="feature-status" data-status="ki">Enabled</span><span class="card-number">02 <span>/ ENERGY</span></span></div>
+            </article>
+            <article class="control-card sparking-card">
+              <div class="card-top"><span class="feature-icon amber"><svg><use href="#i-flame"/></svg></span><button class="switch" role="switch" aria-label="Unlimited Sparking Mode" aria-checked="false" data-toggle="sparking"><span></span></button></div>
+              <h3>Unlimited Sparking</h3><p>Your ultimate form. No countdown.<br class="desktop-break"> Just pure, unlimited power.</p>
+              <div class="sparking-readout"><span class="infinity">&#8734;</span><div><strong id="sparking-value">No time limit</strong><span id="sparking-description">Activate to keep the spark alive</span></div><svg><use href="#i-bolt"/></svg></div>
+              <div class="card-footer"><span class="feature-status" data-status="sparking">Disabled</span><span class="card-number">03 <span>/ POWER</span></span></div>
+            </article>
+            <article class="control-card frame-card">
+              <div class="frame-heading"><div class="card-top"><span class="feature-icon violet"><svg><use href="#i-monitor"/></svg></span></div><div><h3>Control Frame Rate</h3><p>Your pace. Your perfect balance of smooth and stable.</p></div><button class="switch" role="switch" aria-label="Control Frame Rate" aria-checked="true" data-toggle="fps"><span></span></button></div>
+              <div class="frame-controls"><div class="frame-value"><strong id="frame-value">60</strong><span>FPS CAP</span></div><div class="frame-slider"><label class="sr-only" for="fps-range">Preview frame rate cap</label><input type="range" id="fps-range" min="30" max="240" step="1" value="60"><div class="range-labels"><span>30 FPS</span><span>240 FPS</span></div></div></div>
+              <div class="fps-presets" aria-label="Frame rate presets"><button data-fps="30">30 FPS</button><button data-fps="60" class="selected">60 FPS <span>DEFAULT</span></button><button data-fps="120">120 FPS</button><button data-fps="144">144 FPS</button><button data-fps="0">Unlimited <span>&#8734;</span></button></div>
+              <div class="card-footer"><span class="feature-status" data-status="fps">Enabled</span><span class="frame-note"><span class="status-dot"></span>Local preview renderer</span><span class="card-number">04 <span>/ PERFORMANCE</span></span></div>
+            </article>
+            <article class="control-card skill-card">
+              <div class="card-top"><span class="feature-icon pink"><svg><use href="#i-layers"/></svg></span><button class="switch" role="switch" aria-label="Max Skill Count Bars" aria-checked="false" data-toggle="skill"><span></span></button></div>
+              <h3>Max Skill Count Bars</h3><p>More skills. More possibilities.<br class="desktop-break"> Keep every skill bar ready to go.</p>
+              <div class="skill-readout"><div class="skill-bars" id="skill-bars"><i></i><i></i><i></i><i></i><i></i><i></i></div><strong id="skill-value">3 <span>/ 6</span></strong></div>
+              <div class="card-footer"><span class="feature-status" data-status="skill">Disabled</span><span class="card-number">05 <span>/ SKILLS</span></span></div>
+            </article>
+          </div>
+          <div class="notice"><span class="notice-icon"><svg><use href="#i-shield"/></svg></span><div><strong>Built for the training ground.</strong><p>Interactive preview only. No game process is connected. Keep game modifications offline.</p></div><button class="text-button" data-go="session-log">Session details <svg><use href="#i-arrow"/></svg></button></div>
+        </section>
+
+        <section id="page-profiles" class="page" hidden>
+          <div class="page-heading"><div><div class="eyebrow">YOUR POWER, SAVED.</div><h1>Find your flow<span>.</span></h1><p>Switch your playstyle with locally saved control presets.</p></div></div>
+          <div class="profile-grid" id="profiles-list"></div>
+          <form class="panel save-profile" id="save-profile-form"><div><h2>Make it your own</h2><p>Save the current control configuration as a custom profile.</p></div><label for="profile-name" class="sr-only">Profile name</label><input id="profile-name" placeholder="Give your profile a name" maxlength="40" required><button class="button primary" type="submit">Save profile <span>+</span></button></form>
+        </section>
+        <section id="page-session-log" class="page" hidden>
+          <div class="page-heading"><div><div class="eyebrow">EVERY CHANGE, IN VIEW.</div><h1>Your session<span>.</span></h1><p>A local activity log. Preview actions never modify the game.</p></div><button class="button" id="clear-log">Clear log</button></div>
+          <div class="panel log-panel"><div class="panel-heading"><h2>Activity</h2><span class="preview-label"><span class="status-dot"></span>Local only</span></div><div id="log-list"></div></div>
+        </section>
+        <section id="page-settings" class="page" hidden>
+          <div class="page-heading"><div><div class="eyebrow">THE LITTLE DETAILS.</div><h1>Make yourself at home<span>.</span></h1><p>A control room that works the way you do.</p></div></div>
+          <div class="panel settings-panel">
+            <div class="setting-row"><div><h3>Reduce motion</h3><p>Pause ambient energy animation in the training preview.</p></div><button class="switch" id="motion-toggle" role="switch" aria-label="Reduce motion" aria-checked="false"><span></span></button></div>
+            <div class="setting-row"><div><h3>Menu shortcut</h3><p>Show or hide the menu while this page has keyboard focus.</p></div><kbd>F6</kbd></div>
+            <div class="setting-row"><div><h3>Game integration</h3><p>The uploaded archive is a compiled Windows Unreal Engine game.<br>A native, version-specific integration is required to affect gameplay.</p></div><span class="neutral-badge">Not connected</span></div>
+            <div class="setting-row"><div><h3>Local workspace data</h3><p>Restore default controls and remove custom profiles and activity.</p></div><button class="button danger" id="clear-data">Reset workspace</button></div>
+          </div>
+        </section>
+      </main>
+      <footer class="app-footer"><span><span class="status-dot"></span>All systems ready <span class="footer-separator">/</span> <span class="muted">Preview environment</span></span><span id="save-status"><svg><use href="#i-check"/></svg>Changes saved locally</span><span>SPARKING ZERO <b>//</b> CONTROL ROOM</span></footer>
+    </div>
+  </div>
+  <div id="hidden-screen" class="hidden-screen" hidden><span class="brand-mark"><svg><use href="#i-bolt"/></svg></span><div class="eyebrow">YOUR POWER IS STILL HERE.</div><h1>Out of sight. Not out of play.</h1><p>Your preview settings are preserved.</p><button class="button primary" id="restore-menu">Open control room <kbd>F6</kbd></button></div>
+  <dialog id="info-dialog"><div class="dialog-top"><span class="eyebrow">CONTROL ROOM</span><button class="icon-button" id="close-dialog" aria-label="Close dialog"><svg><use href="#i-close"/></svg></button></div><div id="dialog-content"></div></dialog>
+  <div class="toast" id="toast" role="status" hidden><svg><use href="#i-check"/></svg><span></span></div>
+</body>
+</html>
